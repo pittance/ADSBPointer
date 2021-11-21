@@ -55,8 +55,8 @@ def calculateBearing2(lat1, lon1, lat2, lon2):
     return brng
 
 def runIt(myLat,myLon):
-    ##myLat = 51.46063
-    ##myLon = -2.53518
+    ##myLat = 51.46
+    ##myLon = -2.54
 
     ##load the aircraft data from the 1090 json source
     ##with urllib.request.urlopen("http://192.168.0.52/dump1090-fa/data/aircraft.json") as url
@@ -96,9 +96,9 @@ def runIt(myLat,myLon):
 if __name__ == '__main__':
     ser = serial.Serial('/dev/ttyACM0', 9600, timeout=5)
     ser.flush()
-	##set default GPS coords to our house
-	gpsLat = 51.46063
-	gpsLon = -2.53518
+	##set default GPS coords
+	gpsLat = 51.46
+	gpsLon = -2.54
     ##check for the connection
     connected = False
     while not connected:
