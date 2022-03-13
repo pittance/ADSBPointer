@@ -87,6 +87,8 @@ def runIt(myLat,myLon):
         else:
             print("no aircraft with lat/lon data present")
             return "0.0,0.0,aaaaa"
+    except:
+	print("didn't find the json file in runIt")
 
 
 if __name__ == '__main__':
