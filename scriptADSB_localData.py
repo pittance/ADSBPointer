@@ -55,12 +55,8 @@ def calculateBearing2(lat1, lon1, lat2, lon2):
     return brng
 
 def runIt(myLat,myLon):
-    ##myLat = 51.461
-    ##myLon = -2.541
-
     ##load the aircraft data from the 1090 json source
     ##with urllib.request.urlopen("http://192.168.0.52/dump1090-fa/data/aircraft.json") as url
-    
     try:
         data = urllib.request.urlopen("http://127.0.0.1/dump1090-fa/data/aircraft.json")
         jsonData = json.loads(data.read().decode())
@@ -96,9 +92,9 @@ def runIt(myLat,myLon):
 if __name__ == '__main__':
     ser = serial.Serial('/dev/ttyACM0', 9600, timeout=5)
     ser.flush()
-	##set default GPS coords
-	gpsLat = 51.461
-	gpsLon = -2.541
+    ##set default GPS coords to a park lake in Bristol
+    gpsLat = 51.462127
+    gpsLon = -2.545670
     ##check for the connection
     connected = False
     while not connected:
@@ -111,12 +107,12 @@ if __name__ == '__main__':
             time.sleep(3)
 
     while True:
-		##runs continuously (speed limited by sleep)
-		##	ardData is sent to Arduino, the data comes from the runIt() function
+        ##runs continuously (speed limited by sleep)
+        ##ardData is sent to Arduino, the data comes from the runIt() function
         ardData = runIt(gpsLat,gpsLon) + "\n"
-		## write the data to serial (USB)
+	## write the data to serial (USB)
         ser.write(ardData.encode())
-		## read any data coming back from Arduino
+        ## read any data coming back from Arduino
         line = ser.readline().decode('utf-8').rstrip()
         lineArray = line.split(",")
         gpsLat = float(lineArray[0])
