@@ -89,7 +89,7 @@ def runIt(myLat,myLon):
             return "0.0,0.0,aaaaa"
     except:
 	print("didn't find the json file in runIt")
-
+	return "0.0,0.0,aaaaa"
 
 if __name__ == '__main__':
     ser = serial.Serial('/dev/ttyACM0', 9600, timeout=5)
