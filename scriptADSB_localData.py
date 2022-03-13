@@ -60,7 +60,6 @@ def runIt(myLat,myLon):
 
     ##load the aircraft data from the 1090 json source
     ##with urllib.request.urlopen("http://192.168.0.52/dump1090-fa/data/aircraft.json") as url
-    
     try:
         data = urllib.request.urlopen("http://127.0.0.1/dump1090-fa/data/aircraft.json")
         jsonData = json.loads(data.read().decode())
@@ -70,7 +69,7 @@ def runIt(myLat,myLon):
         foundAc = False
         noLatLon = False
         foundAcAge = 1000
-        for ac in data['aircraft']:
+        for ac in jsonData['aircraft']:
             try:
                 thisDist = calculateDistance(ac['lon'],ac['lat'],myLon,myLat)
                 ##print(ac['hex'],ac['seen'],ac['lat'],ac['lon'],thisDist)
@@ -91,14 +90,19 @@ def runIt(myLat,myLon):
         else:
             print("no aircraft with lat/lon data present")
             return "0.0,0.0,aaaaa"
-
+    except:
+        print("no json data or fail (probably)")
+        return "0.0.0.0,aaaaa"
 
 if __name__ == '__main__':
     ser = serial.Serial('/dev/ttyACM0', 9600, timeout=5)
     ser.flush()
-	##set default GPS coords
-	gpsLat = 51.461
-	gpsLon = -2.541
+    print("wait for serial, 5s")
+    time.sleep(5)
+    print("...done")
+    ##set default GPS coords
+    gpsLat = 51.461
+    gpsLon = -2.541
     ##check for the connection
     connected = False
     while not connected:
@@ -111,12 +115,12 @@ if __name__ == '__main__':
             time.sleep(3)
 
     while True:
-		##runs continuously (speed limited by sleep)
-		##	ardData is sent to Arduino, the data comes from the runIt() function
+        ##runs continuously (speed limited by sleep)
+        ##	ardData is sent to Arduino, the data comes from the runIt() function
         ardData = runIt(gpsLat,gpsLon) + "\n"
-		## write the data to serial (USB)
+        ## write the data to serial (USB)
         ser.write(ardData.encode())
-		## read any data coming back from Arduino
+        ## read any data coming back from Arduino
         line = ser.readline().decode('utf-8').rstrip()
         lineArray = line.split(",")
         gpsLat = float(lineArray[0])
