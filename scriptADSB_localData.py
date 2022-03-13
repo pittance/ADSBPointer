@@ -66,7 +66,7 @@ def runIt(myLat,myLon):
         foundAc = False
         noLatLon = False
         foundAcAge = 1000
-        for ac in data['aircraft']:
+        for ac in jsonData['aircraft']:
             try:
                 thisDist = calculateDistance(ac['lon'],ac['lat'],myLon,myLat)
                 ##print(ac['hex'],ac['seen'],ac['lat'],ac['lon'],thisDist)
@@ -88,12 +88,15 @@ def runIt(myLat,myLon):
             print("no aircraft with lat/lon data present")
             return "0.0,0.0,aaaaa"
     except:
-	print("didn't find the json file in runIt")
-	return "0.0,0.0,aaaaa"
+        print("no json data or fail (probably)")
+        return "0.0.0.0,aaaaa"
 
 if __name__ == '__main__':
     ser = serial.Serial('/dev/ttyACM0', 9600, timeout=5)
     ser.flush()
+    print("wait for serial, 5s")
+    time.sleep(5)
+    print("...done")
     ##set default GPS coords to a park lake in Bristol
     gpsLat = 51.462127
     gpsLon = -2.545670
@@ -110,9 +113,9 @@ if __name__ == '__main__':
 
     while True:
         ##runs continuously (speed limited by sleep)
-        ##ardData is sent to Arduino, the data comes from the runIt() function
+        ##	ardData is sent to Arduino, the data comes from the runIt() function
         ardData = runIt(gpsLat,gpsLon) + "\n"
-	## write the data to serial (USB)
+        ## write the data to serial (USB)
         ser.write(ardData.encode())
         ## read any data coming back from Arduino
         line = ser.readline().decode('utf-8').rstrip()
